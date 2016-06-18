@@ -77,19 +77,19 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Min Budget:</label>
 				<div class="col-sm-5"> 
-					<input type="text" class="form-control"  placeholder="Min Budget">
+					<input type="text" class="form-control" ng-model="mnbug" placeholder="Min Budget">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Max Budget :</label>
 				<div class="col-sm-5"> 
-					<input type="text" class="form-control"  placeholder="Budget *"  required> 
+					<input type="text" class="form-control"  placeholder="Budget *" ng-model="mxbug" required> 
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Date :</label>
 				<div class="col-sm-5"> 
-					<input type="date" class="form-control"  placeholder="Budget *"  required>
+					<input type="date" class="form-control" ng-model="getDate" placeholder="Budget *"  required>
 				</div>
 			</div>
 			<div class="form-group"> 
@@ -99,6 +99,31 @@
 			</div>
 		</form>
 	</div>	
+	<div class="container">
+		<div class="leftcontainer">
+			<table class="table table-stipped" style="color:#fff; font-size:15px;">
+				<tr ng-repeat="b in dataN">
+					<td>Bus Name<br />
+						Departure Time<br />
+						Arrival Time<br />
+						Duration<br />
+						Bus Type<br />
+						Fare<br />
+					</td>
+					<td>[[b.TravelsName]]<br />
+						[[b.DepartureTime]]<br />
+						[[b.ArrivalTime]]<br />
+						[[b.duration]]<br />
+						[[b.BusType]]<br />
+						Rs. [[b.fare.totalfare]]<br />
+					</td>
+				</tr>
+			</table>
+		</div>	
+		<div class="rightcontainer">
+
+		</div>	
+	</div>
 	<script>
 	$(function(){
 	
@@ -114,7 +139,7 @@
 	      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
 	    }
 	})
-	.controller('myCtrl', ['$scope','$http', function($scope,$http){
+	.controller('myCtrl', ['$scope','$http','$filter', function($scope,$http,$filter){
 		var appendthis =  ("<div class='modal-overlay js-modal-close'></div>");
 		$("body").append(appendthis);
 		$(".modal-overlay").fadeTo(500, 0.7);
@@ -159,11 +184,16 @@
 			$scope.destShowme = !$scope.destShowme;
 		}		
 		$scope.getData = function() {
+			var currentDate = $filter('date')(new Date($scope.getDate), 'yyyyMMdd');
+			console.log($scope.mxbug);
+			console.log($scope.mnbug);
+			console.log(currentDate);
 			Url2 = "https://developer.goibibo.com/api/bus/search/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&format=json&source="+srcId+"&destination="+destId+"&dateofdeparture=20160619";
 			$http.get(Url2).then(function(response) {
-			    $scope.dataN = response.data;
+			    $scope.dataN = response.data.data.onwardflights;
 			    console.log($scope.dataN);
 			});
+			$scope.busfare=0;
 		};
 	}])
 	</script>

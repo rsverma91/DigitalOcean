@@ -144,9 +144,13 @@ body {
 }
 
 .main{
-	background: url(../images/bg-main.png) center top no-repeat;
+	background: url(../images/bg-main.png) center;
 	width: 100%;
-	background-size: cover;
+}
+
+.leftcontainer{
+	width: 50%;
+	float: left;
 }
 
 .header-wrap{
