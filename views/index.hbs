@@ -4,10 +4,12 @@
 <div ng-app="myApp" ng-controller="myCtrl">
 <input ng-model="name" type="text"></input>
 <table>
-    <tr ng-repeat="x in data">
-     <td>[[x.city]]</td><td>[[x.code]]</td>
-    </tr>
-  </table>
+	<tr ng-repeat="x in data|filter:name">
+		<td>[[x.cname]]</td><td>[[x.cid]]</td>
+	</tr>
+</table>
+<input type="text" ng-model="cid"></input><button ng-click="readData()">Get Data</button>
+  [[dataN]]
 </div>
 <script>
 angular
@@ -16,13 +18,19 @@ angular
 		$interpolateProvider.startSymbol('[[');
 	    $interpolateProvider.endSymbol(']]');
 	}).controller('myCtrl', ['$scope','$http', function($scope,$http){
-		var Url   = "../images/IATADatabase.json";
-		$scope.readCSV = function(dat) {
+		var Url   = "../json/city_list.json";
+		$scope.readCSV = function() {
 			$http.get(Url).then(function(response) {
 			    $scope.data = response.data;
 			});
+		};		
+		$scope.readData = function() {
+			Url2 = "http://developer.goibibo.com/api/cyclone/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&city_id="+$scope.cid+"&check_in=20160619&check_out=20160620";
+			console.log(Url2);
+			$http.get(Url2).then(function(response) {
+			    $scope.dataN = response.data;
+			});
 		};
-		
 		$scope.readCSV();
 	}])
 </script>
