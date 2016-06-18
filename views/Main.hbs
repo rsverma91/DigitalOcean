@@ -2,7 +2,8 @@
 <!--[if lte IE 7]><html id="ie" class="no-js lt-ie10 lt-ie9 lt-ie8" lang="en" xmlns="http://www.w3.org/1999/xhtml"><![endif]-->
 <!--[if IE 8]><html id="ie8" class="no-js lt-ie10 lt-ie9" lang="en" xmlns="http://www.w3.org/1999/xhtml"><![endif]-->
 <!--[if IE 9]><html id="ie9" class="no-js lt-ie10" lang="en" xmlns="http://www.w3.org/1999/xhtml"><![endif]-->
-<!--[if gt IE 9]><!--><html lang="en" class="no-js" xmlns="http://www.w3.org/1999/xhtml"><!--<![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en" class="no-js" xmlns="http://www.w3.org/1999/xhtml" ng-app="myApp"><!--<![endif]-->
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -14,14 +15,26 @@
 	<meta name="robots" content="noindex, follow" />
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../css/landing-page.css" />
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	<link href='https://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'/>
 	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'/>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.7/angular.min.js"></script>
+</style>
 </head>
-<body class="main">
+<body class="main" ng-controller="myCtrl">
+	<div id="popup2" class="modal-box">
+		<header> 
+			<h3>Modal Popup</h3>
+		</header>
+		<div class="modal-body">
+			<a href="#" class="btn btn-small js-modal-close" ng-click="readCSV()">Flight</a> 
+			<a href="#" class="btn btn-small js-modal-close" ng-click="readCSV()">Bus</a> 
+			<a href="#" class="btn btn-small js-modal-close" ng-click="readCSV()">Train</a> 
+		</div>
+	</div>
 	<div class="header-wrap">
 		<div class="header">
 			<div class="brand">
@@ -45,13 +58,21 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Enter Source Point:</label>
 				<div class="col-sm-5">
-					<input type="text" class="form-control" id="email" placeholder="Source" required>
+					<input type="text" class="form-control" id="email" placeholder="Source" ng-model="source" required ng-click="myFunc()">
+					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="showMe">
+						<!-- <li ng-repeat="s in data|filter:{city : source}:true|limitTo:5|lowercase">[[s.city]]</li> -->
+						<li ng-repeat="s in data|filter: source:true|limitTo:5|lowercase">[[s.city]]</li>
+					</ul>
 				</div>
+				
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Enter Destination Point:</label>
 				<div class="col-sm-5"> 
-					<input type="text" class="form-control"  placeholder="Destination" required>
+					<input type="text" class="form-control"  placeholder="Destination" required ng-click="myFunc2()">
+					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="showMe2" >
+						<li style="padding:4px 0px; border-bottom:1px solid #1F310B" ng-repeat="s in data|filter:{city : source}|limitTo:5">[[s.city]]</li>
+					</ul>
 				</div>
 			</div>
 			<div class="form-group">
@@ -63,34 +84,14 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Max Budget :</label>
 				<div class="col-sm-5"> 
-					<input type="text" class="form-control"  placeholder="Budget *" required>
+					<input type="text" class="form-control"  placeholder="Budget *"  required> 
 				</div>
 			</div>
-			<div class="container">
-			<div class="row">
-			    <div class='col-sm-6'>
-			        <div class="form-group">
-			            <div class='input-group date' id='datetimepicker5'>
-			                <input type='text' class="form-control" />
-			                <span class="input-group-addon">
-			                    <span class="glyphicon glyphicon-calendar"></span>
-			                </span>
-			            </div>
-			        </div>
-			    </div>
-			    <script type="text/javascript">
-			        $(function () {
-			            $('#datetimepicker5').datetimepicker({
-			                defaultDate: "11/1/2013",
-			                disabledDates: [
-			                    moment("12/25/2013"),
-			                    new Date(2013, 11 - 1, 21),
-			                    "11/22/2013 00:53"
-			                ]
-			            });
-			        });
-			    </script>
-			    </div>
+			<div class="form-group">
+				<label class="control-label col-sm-4" >Date :</label>
+				<div class="col-sm-5"> 
+					<input type="date" class="form-control"  placeholder="Budget *"  required>
+				</div>
 			</div>
 			<div class="form-group"> 
 				<div>
@@ -98,6 +99,65 @@
 				</div>
 			</div>
 		</form>
-	</div>
+	</div>	
+	<script>
+	$(function(){
+	
+	});
+	angular
+	.module('myApp',[])
+	.config(function($interpolateProvider){
+		$interpolateProvider.startSymbol('[[');
+	    $interpolateProvider.endSymbol(']]');
+	}).controller('myCtrl', ['$scope','$http', function($scope,$http){
+		var appendthis =  ("<div class='modal-overlay js-modal-close'></div>");
+		$("body").append(appendthis);
+		$(".modal-overlay").fadeTo(500, 0.7);
+		$('#popup2').fadeIn($('a[data-modal-id]').data());
+
+		$(".js-modal-close, .modal-overlay").click(function() {
+			type = $(this).text();
+		    $(".modal-box, .modal-overlay").fadeOut(500, function() {
+		        $(".modal-overlay").remove();
+		    });
+		 
+		});
+		$(window).resize(function() {
+		    $(".modal-box").css({
+		        top: ($(window).height() - $(".modal-box").outerHeight()) / 2,
+		        left: ($(window).width() - $(".modal-box").outerWidth()) / 2
+		    });
+		});
+		$(window).resize();
+		$scope.showMe = false;
+		$scope.showMe2 = false;
+		$scope.myFunc = function() {
+	        $scope.showMe = !$scope.showMe;
+	    }
+	    $scope.myFunc2 = function() {
+	        $scope.showMe2 = !$scope.showMe2;
+	    }
+		var Url;
+		$scope.readCSV = function() {
+			console.log(type);
+			if(type == "Flight")
+				Url = "../json/IATADatabase.json";
+			else if(type == "Bus")
+				Url = "../json/busCityList.json";
+			else
+				Url = "../json/trainStation.json";
+			$http.get(Url).then(function(response) {
+			    $scope.data = response.data;
+			});
+		};		
+		/*$scope.readData = function() {
+			Url2 = "http://developer.goibibo.com/api/cyclone/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&city_id="+$scope.cid+"&check_in=20160619&check_out=20160620";
+			console.log(Url2);
+			$http.get(Url2).then(function(response) {
+			    $scope.dataN = response.data;
+			});
+		};*/
+	}])
+	</script>
 </body>
 </html>
