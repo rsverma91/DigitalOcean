@@ -58,10 +58,9 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Enter Source Point:</label>
 				<div class="col-sm-5">
-					<input type="text" class="form-control" id="email" placeholder="Source" ng-model="source" required ng-click="myFunc()">
-					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="showMe">
-						<!-- <li ng-repeat="s in data|filter:{city : source}:true|limitTo:5|lowercase">[[s.city]]</li> -->
-						<li ng-repeat="s in data|filter: source:true|limitTo:5|lowercase">[[s.city]]</li>
+					<input type="text" class="form-control" id="email" placeholder="Source" ng-model="source" required ng-focus="srcShowme=!srcShowme">
+					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="srcShowme">
+						<li style="cursor: pointer;" ng-repeat="s in data|filter:source:startsWith|orderBy:'city'|limitTo:5" ng-click="setSource(s)">[[s.city|capitalize]]</li>
 					</ul>
 				</div>
 				
@@ -69,9 +68,9 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" >Enter Destination Point:</label>
 				<div class="col-sm-5"> 
-					<input type="text" class="form-control"  placeholder="Destination" required ng-click="myFunc2()">
-					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="showMe2" >
-						<li style="padding:4px 0px; border-bottom:1px solid #1F310B" ng-repeat="s in data|filter:{city : source}|limitTo:5">[[s.city]]</li>
+					<input type="text" class="form-control"  placeholder="Destination"  ng-model="dest" required ng-focus="destShowme=!destShowme">
+					<ul style="color:white; background:#1F330B; list-style:none; position:absolute; width:94%; z-index:100" ng-show="destShowme" >
+						<li style="padding:4px 0px; border-bottom:1px solid #1F310B;cursor: pointer;" ng-repeat="s in data|filter:dest:startsWith|orderBy:'city'|limitTo:5" ng-click="setDest(s)">[[s.city|capitalize]]</li>
 					</ul>
 				</div>
 			</div>
@@ -95,7 +94,7 @@
 			</div>
 			<div class="form-group"> 
 				<div>
-					<button type="submit" class="btn btn-success center-block">Search..</button>
+					<button type="button" class="btn btn-success center-block" ng-click="getData()">Search..</button>
 				</div>
 			</div>
 		</form>
@@ -109,37 +108,32 @@
 	.config(function($interpolateProvider){
 		$interpolateProvider.startSymbol('[[');
 	    $interpolateProvider.endSymbol(']]');
-	}).controller('myCtrl', ['$scope','$http', function($scope,$http){
+	})
+	.filter('capitalize', function() {
+	    return function(input) {
+	      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+	    }
+	})
+	.controller('myCtrl', ['$scope','$http', function($scope,$http){
 		var appendthis =  ("<div class='modal-overlay js-modal-close'></div>");
 		$("body").append(appendthis);
 		$(".modal-overlay").fadeTo(500, 0.7);
 		$('#popup2').fadeIn($('a[data-modal-id]').data());
-
 		$(".js-modal-close, .modal-overlay").click(function() {
 			type = $(this).text();
 		    $(".modal-box, .modal-overlay").fadeOut(500, function() {
 		        $(".modal-overlay").remove();
 		    });
-		 
-		});
-		$(window).resize(function() {
+		});$(window).resize(function() {
 		    $(".modal-box").css({
 		        top: ($(window).height() - $(".modal-box").outerHeight()) / 2,
 		        left: ($(window).width() - $(".modal-box").outerWidth()) / 2
 		    });
-		});
-		$(window).resize();
-		$scope.showMe = false;
-		$scope.showMe2 = false;
-		$scope.myFunc = function() {
-	        $scope.showMe = !$scope.showMe;
-	    }
-	    $scope.myFunc2 = function() {
-	        $scope.showMe2 = !$scope.showMe2;
-	    }
-		var Url;
+		});$(window).resize();
+		$scope.srcShowme = false;
+		$scope.destShowme = false;
+		var Url,srcId,destId;
 		$scope.readCSV = function() {
-			console.log(type);
 			if(type == "Flight")
 				Url = "../json/IATADatabase.json";
 			else if(type == "Bus")
@@ -149,14 +143,28 @@
 			$http.get(Url).then(function(response) {
 			    $scope.data = response.data;
 			});
-		};		
-		/*$scope.readData = function() {
-			Url2 = "http://developer.goibibo.com/api/cyclone/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&city_id="+$scope.cid+"&check_in=20160619&check_out=20160620";
-			console.log(Url2);
+		};
+		$scope.startsWith = function (actual, expected) {
+		    var lowerStr = (actual + "").toLowerCase();
+		    return lowerStr.indexOf(expected.toLowerCase()) === 0;
+		}
+		$scope.setSource = function(val){
+			$scope.source = val.city;
+			srcId = val.code;
+			$scope.srcShowme = !$scope.srcShowme;
+		}
+		$scope.setDest = function(val){
+			$scope.dest = val.city;
+			destId = val.code
+			$scope.destShowme = !$scope.destShowme;
+		}		
+		$scope.getData = function() {
+			Url2 = "https://developer.goibibo.com/api/bus/search/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&format=json&source="+srcId+"&destination="+destId+"&dateofdeparture=20160619";
 			$http.get(Url2).then(function(response) {
 			    $scope.dataN = response.data;
+			    console.log($scope.dataN);
 			});
-		};*/
+		};
 	}])
 	</script>
 </body>
