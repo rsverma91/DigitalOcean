@@ -12,14 +12,92 @@
 	<meta name="description" content="" />
 	<meta name="viewport" content="width=device-width" />
 	<meta name="robots" content="noindex, follow" />
-	<!-- 
-		Update the file path and remove this comment
-	-->
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="../css/landing-page.css" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	<link href='https://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'/>
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'/>
 </head>
-<body class="home landing-page-flex">
-	
+<body class="main">
+	<div class="header-wrap">
+		<div class="header">
+			<div class="brand">
+				<a href="/"><img src="/images/brand.png"/></a>
+			</div>
+			<div class="main-nav">
+				<ul>
+					<li><a href="/">Back</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="banner">
+		<div class="tagline">
+			<h1>Welcome to the Trip planner</h1>
+			<p>Here we can help in planning trip which fits in your budget. </p>
+		</div>
+	</div>
+	<div class="form-container">
+		<form class="form-horizontal" role="form">
+			<div class="form-group">
+				<label class="control-label col-sm-4" >Enter Source Point:</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" id="email" placeholder="Source" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4" >Enter Destination Point:</label>
+				<div class="col-sm-5"> 
+					<input type="text" class="form-control"  placeholder="Destination" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4" >Min Budget:</label>
+				<div class="col-sm-5"> 
+					<input type="text" class="form-control"  placeholder="Min Budget">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-4" >Max Budget :</label>
+				<div class="col-sm-5"> 
+					<input type="text" class="form-control"  placeholder="Budget *" required>
+				</div>
+			</div>
+			<div class="container">
+			<div class="row">
+			    <div class='col-sm-6'>
+			        <div class="form-group">
+			            <div class='input-group date' id='datetimepicker5'>
+			                <input type='text' class="form-control" />
+			                <span class="input-group-addon">
+			                    <span class="glyphicon glyphicon-calendar"></span>
+			                </span>
+			            </div>
+			        </div>
+			    </div>
+			    <script type="text/javascript">
+			        $(function () {
+			            $('#datetimepicker5').datetimepicker({
+			                defaultDate: "11/1/2013",
+			                disabledDates: [
+			                    moment("12/25/2013"),
+			                    new Date(2013, 11 - 1, 21),
+			                    "11/22/2013 00:53"
+			                ]
+			            });
+			        });
+			    </script>
+			    </div>
+			</div>
+			<div class="form-group"> 
+				<div>
+					<button type="submit" class="btn btn-success center-block">Search..</button>
+				</div>
+			</div>
+		</form>
+	</div>
 </body>
 </html>
