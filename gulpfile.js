@@ -8,14 +8,14 @@ module.exports = gulp;
 
 
 gulp.task('compass', function() {
-    gulp.src('design/css/*.scss')
+    gulp.src('public/css/*.scss')
         .pipe(compass({
-            css: 'design/css',
-            sass: 'design/css'
+            css: 'public/css',
+            sass: 'public/css'
         }).on("error", function(err) {
             console.log("Error at scss file" + err);
         }))
-        .pipe(gulp.dest('app/assets/temp'))
+        .pipe(gulp.dest('assets/temp'))
         .pipe(browserSync.reload({
             stream: true
         }));
@@ -26,13 +26,13 @@ gulp.task('bs-reload', function() {
 });
 // Default task to be run with `gulp`
 gulp.task('default', ['compass', 'browser-sync'], function() {
-    gulp.watch("design/css/*.scss", ['compass']);
-    gulp.watch(["design/css/*.css", "design/templates/*.html"], ['bs-reload']);
+    gulp.watch("public/css/*.scss", ['compass']);
+    gulp.watch(["public/css/*.css", "views/*.hbs"], ['bs-reload']);
 });
 
 gulp.task('browser-sync', ['nodemon'], function() {
     browserSync.init(null, {
-        files: ["public/**/*.*"],
+        files: ["public/css/*.*"],
     });
 });
 gulp.task('nodemon', function(cb) {
