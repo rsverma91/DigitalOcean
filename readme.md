@@ -5,4 +5,10 @@ budget amount and then this application will assist with different options
 for bus, flight booking and hotel booking.
 
 
+Process:
+1. open cmd
+2. Please goto project folder and do <b>npm install</b>
+3. Run the app using <b>gulp</b>
+
+
 Please use <b>your key</b> for getTrain API
