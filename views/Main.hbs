@@ -102,7 +102,7 @@
 	<div class="container">
 		<div class="leftcontainer">
 			<table class="table table-stipped" style="color:#fff; font-size:15px;">
-				<tr ng-repeat="b in dataN">
+				<tr ng-repeat="b in dataN|orderBy:'fare.totalfare'">
 					<td>Bus Name<br />
 						Departure Time<br />
 						Arrival Time<br />
@@ -110,7 +110,7 @@
 						Bus Type<br />
 						Fare<br />
 					</td>
-					<td>[[b.TravelsName]]<br />
+					<td ng-init="dataCal(b)">[[b.TravelsName]]<br />
 						[[b.DepartureTime]]<br />
 						[[b.ArrivalTime]]<br />
 						[[b.duration]]<br />
@@ -185,15 +185,37 @@
 		}		
 		$scope.getData = function() {
 			var currentDate = $filter('date')(new Date($scope.getDate), 'yyyyMMdd');
-			console.log($scope.mxbug);
-			console.log($scope.mnbug);
-			console.log(currentDate);
-			Url2 = "https://developer.goibibo.com/api/bus/search/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&format=json&source="+srcId+"&destination="+destId+"&dateofdeparture=20160619";
+			if(type == "Bus")
+				Url2 = "https://developer.goibibo.com/api/bus/search/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&format=json&source="+srcId+"&destination="+destId+"&dateofdeparture="+currentDate;
+			else if(type == "Flight")
+				Url2 = "https://developer.goibibo.com/api/search/?app_id=b00e3272&app_key=4611dcadc7b2cc742cc102cafec68199&format=json&source="+srcId+"&destination="+destId+"&dateofdeparture="+currentDate+"&seatingclass=E&adults=1&children=0&infants=0"
+			else
+				Url2 = "";
 			$http.get(Url2).then(function(response) {
 			    $scope.dataN = response.data.data.onwardflights;
-			    console.log($scope.dataN);
+			    keys = Object.keys(response.data.data.onwardflights);
+				len = keys.length;
 			});
-			$scope.busfare=0;
+			var count = 0;
+			var totaldd = 0
+			var totalmm = 0;
+			var totalyy = 0;
+			$scope.dataCal = function(data){
+				count++;
+				totalyy += parseInt(data.depdate.toLowerCase().split('t')[0].split('-')[0]);
+				totalmm += parseInt(data.depdate.toLowerCase().split('t')[0].split('-')[1]);
+				totaldd += parseInt(data.depdate.toLowerCase().split('t')[0].split('-')[2]);
+				if(count == len){
+					totalyy = totalyy/count;
+					totalmm = totalmm/count;
+					totaldd = totaldd/count;
+					var date2 = totalyy+'-'+totalmm+'-'+(totaldd+1);
+					var date1 = totalyy+'-'+totalmm+'-'+totaldd;
+					$http.get("/api/getHotels/"+$scope.dest+"/"+date1+"/"+date2).then(function(response) {
+					    console.log(response.data);
+					});
+				}
+			}			
 		};
 	}])
 	</script>
