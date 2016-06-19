@@ -153,6 +153,10 @@ body {
 	float: left;
 }
 
+.rightcontainer{
+	width: 50%;
+	float: left;
+}
 .header-wrap{
 	background: rgba(7,12,17,0.33);
 	@include clearfix();

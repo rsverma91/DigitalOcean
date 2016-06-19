@@ -102,7 +102,7 @@
 	<div class="container">
 		<div class="leftcontainer">
 			<table class="table table-stipped" style="color:#fff; font-size:15px;">
-				<tr ng-repeat="b in dataN|orderBy:'fare.totalfare'">
+				<tr ng-repeat="b in dataN|orderBy:'fare.totalfare'" id="bus[[$index+1]]">
 					<td>Bus Name<br />
 						Departure Time<br />
 						Arrival Time<br />
@@ -115,13 +115,36 @@
 						[[b.ArrivalTime]]<br />
 						[[b.duration]]<br />
 						[[b.BusType]]<br />
-						Rs. [[b.fare.totalfare]]<br />
+						Rs. <span id="busfare[[$index+1]]">[[b.fare.totalfare]]</span><br />
 					</td>
 				</tr>
 			</table>
 		</div>	
 		<div class="rightcontainer">
-
+			<table class="table table-stipped" style="color:#fff; font-size:15px;">
+				<tr ng-repeat="h in hdata|orderBy:'mnp'" id="hotel[[$index+1]]">
+					<td style="width:20%; border:1px solid #fff">
+						Hotel Name<br />
+						Duration<br />
+						Location<br />
+						Fare<br />
+						<br />
+						<br />
+					</td>
+					<td>
+						[[h.htn]]<br />
+						[[h.fc_days]]<br />
+						[[h.loc]]<br />
+						Rs. <span id="hotelfare[[$index+1]]">[[h.mnp]]</span><br />
+						<br />
+						<br />
+					</td>
+					<td>
+						Grand Total<br />
+						<span>[[dataCal2($index+1,h.mnp)]]</span>
+					</td>
+				</tr>
+			</table>
 		</div>	
 	</div>
 	<script>
@@ -200,6 +223,7 @@
 			var totaldd = 0
 			var totalmm = 0;
 			var totalyy = 0;
+			var busfare="";
 			$scope.dataCal = function(data){
 				count++;
 				totalyy += parseInt(data.depdate.toLowerCase().split('t')[0].split('-')[0]);
@@ -213,8 +237,20 @@
 					var date1 = totalyy+'-'+totalmm+'-'+totaldd;
 					$http.get("/api/getHotels/"+$scope.dest+"/"+date1+"/"+date2).then(function(response) {
 					    console.log(response.data);
+					    $scope.hdata = response.data.chi;
+					    keys2 = Object.keys(response.data.chi);
+						len2 = keys.length;
 					});
 				}
+			}
+			count = 0
+			$scope.dataCal2 = function(val,mrp){
+				totalMrp = parseInt($('#busfare'+val).text()) + parseInt(mrp);
+				if(!(totalMrp>= $scope.mnbug) || !(totalMrp<=$scope.mxbug)){
+					$('#bus'+val).hide();
+					$('#hotel'+val).hide();
+				}
+				return totalMrp;
 			}			
 		};
 	}])
