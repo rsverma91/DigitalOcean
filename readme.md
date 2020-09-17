@@ -12,5 +12,3 @@ Process:
 
 
 Please use <b>your key</b> for getTrain API
-
-###### [Demo](https://rsverma91.github.io/Drawing/index.html){:target="_blank"}
